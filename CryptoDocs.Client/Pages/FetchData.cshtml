@@ -1,0 +1,54 @@
+﻿@using System.Numerics
+@using System.Security.Cryptography
+@using CryptoDocs.Shared
+@using CryptoDocs.Shared.Rsa
+@page "/fetchdata"
+@inject HttpClient _http
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+<p>P number</p>
+<textarea bind="@PString"></textarea>
+
+<p>Q number</p>
+<textarea bind="@QString"></textarea>
+
+<button onclick="@GetSessionKey">Get session key</button>
+
+@if (SessionKey != null)
+{
+    <p>Session key:</p>
+    <p>@string.Join(", ", SessionKey.Select(x => x.ToString()))</p>
+}
+
+@functions {
+
+    byte[] SessionKey { get; set; }
+
+    RsaPrivateInfo PrivateInfo { get; set; }
+
+    string PString { get; set; }
+    string QString { get; set; }
+
+
+    async Task GetSessionKey()
+    {
+        var p = BigInteger.Parse(PString);
+        var q = BigInteger.Parse(QString);
+
+        PrivateInfo = RsaPrivateInfo.Generate(p, q);
+
+        var sessionKeyEncrypted = await _http.PostJsonAsync<byte[]>("api/Data/GetEncryptedSessionKey", PrivateInfo.PublicKey);
+        SessionKey = PrivateInfo.PrivateKey.Decrypt(sessionKeyEncrypted);
+    }
+
+    protected override async Task OnInitAsync()
+    {
+        //var privateKey = Rsa2048.GeneratePrivate();
+        //var publicKey = privateKey.PublicKey;
+
+
+    }
+}
