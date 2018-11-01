@@ -1,5 +1,6 @@
 ﻿using System;
 using CryptoDocs.Shared;
+using CryptoDocs.Shared.Rsa;
 
 namespace CryptoDocs.PrimeGenerator
 {
@@ -9,9 +10,19 @@ namespace CryptoDocs.PrimeGenerator
         {
             var generator = new BigIntegerService();
 
-            var num = generator.GetPrime();
-            Console.WriteLine(num);
-            Console.ReadLine();
+            var p = generator.GetPrime();
+            var q = generator.GetPrime();
+
+            var info = RsaPrivateInfo.Generate(p, q);
+
+            Console.WriteLine("P");
+            Console.WriteLine(info.P);
+            Console.WriteLine("Q");
+            Console.WriteLine(info.Q);
+            Console.WriteLine("E");
+            Console.WriteLine(info.E);
+            Console.WriteLine("K");
+            Console.WriteLine(info.K);
         }
     }
 }

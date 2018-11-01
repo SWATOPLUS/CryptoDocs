@@ -30,7 +30,7 @@ namespace CryptoDocs.Shared.Rsa
                     continue;
                 }
 
-                for (var k = BigInteger.One; k < euler; k++)
+                for (var k = BigInteger.One; k < 10000; k++)
                 {
                     var mod = (k * euler + 1) % e;
 
