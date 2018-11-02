@@ -15,11 +15,8 @@ namespace CryptoDocs.Shared
 
         public BigInteger GetPrime()
         {
-            var tries = 0;
-
             while (true)
             {
-                Console.WriteLine($"trying {tries++}");
                 var candidate = GetRandom();
 
                 if (IsProbablyPrime(candidate, 100))

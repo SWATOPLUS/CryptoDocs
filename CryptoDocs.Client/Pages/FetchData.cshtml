@@ -1,54 +1,93 @@
-﻿@using System.Numerics
-@using System.Security.Cryptography
+﻿@using System.Text
 @using CryptoDocs.Shared
+@using CryptoDocs.Shared.Dto
 @using CryptoDocs.Shared.Rsa
+@using MoreLinq
 @page "/fetchdata"
 @inject HttpClient _http
+@inject ISymmetricCryptoProvider _сryptoProvider
 
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-<p>P number</p>
-<textarea bind="@PString"></textarea>
-
-<p>Q number</p>
-<textarea bind="@QString"></textarea>
-
-<button onclick="@GetSessionKey">Get session key</button>
+<p>Key pair</p>
+<div><textarea bind="@KeyPairString"></textarea></div>
+<div><button class="btn btn-primary" onclick="@GetSessionKey">Get session key</button></div>
 
 @if (SessionKey != null)
 {
     <p>Session key:</p>
-    <p>@string.Join(", ", SessionKey.Select(x => x.ToString()))</p>
+    <p>@Convert.ToBase64String(SessionKey)</p>
+
+    <p>File name</p>
+    <div><input type="text" bind="@FileName" onchange=@SetDirty /></div>
+    <p>File name</p>
+    <div>
+        <textarea bind="@FileContent" onchange=@SetDirty></textarea>
+    </div>
+    <div>
+        <button class="btn btn-primary" onclick="@GetFile">Get</button>
+        <button class="btn btn-danger" onclick="@SetFile">Set</button>
+    </div>
+}
+
+@if (IsSaved)
+{
+    <span>Same with server</span>
 }
 
 @functions {
 
-    byte[] SessionKey { get; set; }
+byte[] SessionKey { get; set; }
 
-    RsaPrivateInfo PrivateInfo { get; set; }
+RsaKeyPair KeyPair { get; set; }
 
-    string PString { get; set; }
-    string QString { get; set; }
+string KeyPairString { get; set; }
 
+string FileName { get; set; }
 
-    async Task GetSessionKey()
-    {
-        var p = BigInteger.Parse(PString);
-        var q = BigInteger.Parse(QString);
+string FileContent { get; set; }
 
-        PrivateInfo = RsaPrivateInfo.Generate(p, q);
-
-        var sessionKeyEncrypted = await _http.PostJsonAsync<byte[]>("api/Data/GetEncryptedSessionKey", PrivateInfo.PublicKey);
-        SessionKey = PrivateInfo.PrivateKey.Decrypt(sessionKeyEncrypted);
-    }
-
-    protected override async Task OnInitAsync()
-    {
-        //var privateKey = Rsa2048.GeneratePrivate();
-        //var publicKey = privateKey.PublicKey;
+bool IsSaved { get; set; }
 
 
-    }
+async Task GetSessionKey()
+{
+    KeyPair = new RsaKeyPair(KeyPairString);
+
+    var sessionKeyEncryptedBase64 = await _http.PostJsonAsync<string>("api/Data/GetEncryptedSessionKey", KeyPair.PublicKey.ToDto());
+    var sessionKeyEncrypted = Convert.FromBase64String(sessionKeyEncryptedBase64);
+    SessionKey = KeyPair.PrivateKey.Decrypt(sessionKeyEncrypted);
 }
+
+async Task GetFile()
+{
+    var keys = SessionKey.Batch(32).ToArray();
+    //var data = Encoding.UTF32.GetBytes(FileContent);
+
+    var encryptedContentBase64 = await _http.PostJsonAsync<string>($"api/Data/GetFile/{FileName}", KeyPair.PublicKey.ToDto());
+    var encryptedContent = Convert.FromBase64String(encryptedContentBase64);
+    var data = _сryptoProvider.Decrypt(encryptedContent, keys[0].ToArray(), keys[1].ToArray());
+    FileContent = Encoding.UTF8.GetString(data);
+
+    IsSaved = true;
+}
+
+async Task SetFile()
+{
+    var keys = SessionKey.Batch(32).ToArray();
+    var data = Encoding.UTF8.GetBytes(FileContent ?? string.Empty);
+
+    var encryptedContent = _сryptoProvider.Encrypt(data, keys[0].ToArray(), keys[1].ToArray());
+    var encryptedContentBase64 = Convert.ToBase64String(encryptedContent);
+    IsSaved = await _http.PostJsonAsync<bool>($"api/Data/SetFile/{FileName}", new FileRequest
+    {
+        EncryptedContentBase64 = encryptedContentBase64,
+        PublicKeyDto = KeyPair.PublicKey.ToDto()
+    }) && false;
+}
+
+void SetDirty(UIChangeEventArgs e)
+{
+    IsSaved = false;
+}
+
+}
+
