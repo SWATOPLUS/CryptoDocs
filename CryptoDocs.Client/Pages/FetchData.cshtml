@@ -59,12 +59,11 @@ async Task GetSessionKey()
 
 async Task GetFile()
 {
-    var keys = SessionKey.Batch(32).ToArray();
     //var data = Encoding.UTF32.GetBytes(FileContent);
 
     var encryptedContentBase64 = await _http.PostJsonAsync<string>($"api/Data/GetFile/{FileName}", KeyPair.PublicKey.ToDto());
     var encryptedContent = Convert.FromBase64String(encryptedContentBase64);
-    var data = _сryptoProvider.Decrypt(encryptedContent, keys[0].ToArray(), keys[1].ToArray());
+    var data = _сryptoProvider.Decrypt(encryptedContent, SessionKey);
     FileContent = Encoding.UTF8.GetString(data);
 
     IsSaved = true;
@@ -75,7 +74,7 @@ async Task SetFile()
     var keys = SessionKey.Batch(32).ToArray();
     var data = Encoding.UTF8.GetBytes(FileContent ?? string.Empty);
 
-    var encryptedContent = _сryptoProvider.Encrypt(data, keys[0].ToArray(), keys[1].ToArray());
+    var encryptedContent = _сryptoProvider.Encrypt(data, SessionKey);
     var encryptedContentBase64 = Convert.ToBase64String(encryptedContent);
     IsSaved = await _http.PostJsonAsync<bool>($"api/Data/SetFile/{FileName}", new FileRequest
     {

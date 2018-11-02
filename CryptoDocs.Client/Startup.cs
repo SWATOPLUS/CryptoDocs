@@ -8,7 +8,7 @@ namespace CryptoDocs.Client
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ISymmetricCryptoProvider>(new VernamCryptoProvider());
+            services.AddSingleton<ISymmetricCryptoProvider>(new IdeaCryptoProvider());
         }
 
         public void Configure(IBlazorApplicationBuilder app)

@@ -2,28 +2,21 @@
 {
     public class VernamCryptoProvider : ISymmetricCryptoProvider
     {
-        public byte[] Encrypt(byte[] data, byte[] key, byte[] iv)
+        public byte[] Encrypt(byte[] data, byte[] key)
         {
-            var superKey = new byte[key.Length];
-
-            for (var i = 0; i < superKey.Length; i++)
-            {
-                superKey[i] = (byte)(key[i] ^ iv[i]);
-            }
-
             var result = new byte[data.Length];
 
             for (var i = 0; i < result.Length; i++)
             {
-                result[i] = (byte)(data[i] ^ superKey[i % superKey.Length]);
+                result[i] = (byte)(data[i] ^ key[i % key.Length]);
             }
 
             return result;
         }
 
-        public byte[] Decrypt(byte[] data, byte[] key, byte[] iv)
+        public byte[] Decrypt(byte[] data, byte[] key)
         {
-            return Encrypt(data, key, iv);
+            return Encrypt(data, key);
         }
     }
 }

@@ -57,8 +57,7 @@ namespace CryptoDocs.Server.Controllers
             var data = System.IO.File.Exists(fileName) ? System.IO.File.ReadAllBytes(fileName) : new byte[0];
             var publicKey = publicKeyDto.ToModel();
             var sessionKey = SessionKeyCache[(publicKey.N, publicKey.E)];
-            var keyParts = sessionKey.Batch(32).ToArray();
-            return _cryptoProvider.Encrypt(data, keyParts[0].ToArray(), keyParts[1].ToArray());
+            return _cryptoProvider.Encrypt(data, sessionKey);
         }
 
         [HttpPost("{fileName}")]
@@ -68,8 +67,7 @@ namespace CryptoDocs.Server.Controllers
             var encryptedData = Convert.FromBase64String(request.EncryptedContentBase64);
             var publicKey = request.PublicKeyDto.ToModel();
             var sessionKey = SessionKeyCache[(publicKey.N, publicKey.E)];
-            var keyParts = sessionKey.Batch(32).ToArray();
-            var data = _cryptoProvider.Decrypt(encryptedData, keyParts[0].ToArray(), keyParts[1].ToArray());
+            var data = _cryptoProvider.Decrypt(encryptedData, sessionKey);
             System.IO.File.WriteAllBytes(fileName, data);
             return Json(true);
         }
