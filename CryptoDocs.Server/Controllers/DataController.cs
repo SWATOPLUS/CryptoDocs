@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using CryptoDocs.Shared.Dto;
 using CryptoDocs.Shared.Rsa;
+using CryptoDocs.Shared.Symmetric;
 using Microsoft.EntityFrameworkCore.Internal;
 using MoreLinq;
 
@@ -18,13 +19,13 @@ namespace CryptoDocs.Server.Controllers
     [Route("api/[controller]/[action]")]
     public class DataController : Controller
     {
-        private readonly ISymmetricCryptoProvider _cryptoProvider;
+        private readonly IBlockCryptoProvider _cryptoProvider;
 
         private const string DirectoryName = "files";
 
         public DataController
         (
-            ISymmetricCryptoProvider cryptoProvider
+            IBlockCryptoProvider cryptoProvider
         )
         {
             if (!System.IO.Directory.Exists(DirectoryName))

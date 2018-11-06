@@ -33,6 +33,7 @@ namespace CryptoDocs.Shared
             bytes[bytes.Length - 1] = (byte)((bytes[bytes.Length - 1] >> 2) | 0b_0100_0000);
             return new BigInteger(bytes);
         }
+
         public bool IsProbablyPrime(BigInteger value, uint witnesses = 10)
         {
             if (value <= 1)

@@ -1,11 +1,11 @@
 ﻿@using System.Text
-@using CryptoDocs.Shared
+@using CryptoDocs.Shared.Symmetric
 @using CryptoDocs.Shared.Dto
 @using CryptoDocs.Shared.Rsa
 @using MoreLinq
 @page "/fetchdata"
 @inject HttpClient _http
-@inject ISymmetricCryptoProvider _сryptoProvider
+@inject IDataCryptoProvider _сryptoProvider
 
 <p>Key pair</p>
 <div><textarea bind="@KeyPairString"></textarea></div>
@@ -59,7 +59,7 @@ async Task GetSessionKey()
 
 async Task GetFile()
 {
-    //var data = Encoding.UTF32.GetBytes(FileContent);
+    //var block = Encoding.UTF32.GetBytes(FileContent);
 
     var encryptedContentBase64 = await _http.PostJsonAsync<string>($"api/Data/GetFile/{FileName}", KeyPair.PublicKey.ToDto());
     var encryptedContent = Convert.FromBase64String(encryptedContentBase64);

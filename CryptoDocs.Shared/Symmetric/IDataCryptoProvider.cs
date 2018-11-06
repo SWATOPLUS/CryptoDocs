@@ -1,8 +1,9 @@
-﻿namespace CryptoDocs.Shared
+﻿namespace CryptoDocs.Shared.Symmetric
 {
-    public interface ISymmetricCryptoProvider
+    public interface IDataCryptoProvider
     {
         byte[] Encrypt(byte[] data, byte[] key);
+
         byte[] Decrypt(byte[] data, byte[] key);
     }
 }
