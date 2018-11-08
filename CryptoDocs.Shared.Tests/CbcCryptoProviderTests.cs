@@ -33,7 +33,7 @@ namespace CryptoDocs.Shared.Tests
         }
 
         [Fact]
-        public void Short3LengthData_EncryptAndDecrypt_SourceAndDecryptedAreSame()
+        public void Short5LengthData_EncryptAndDecrypt_SourceAndDecryptedAreSame()
         {
             var key = new byte[16];
             var sourceData = new byte[5];
