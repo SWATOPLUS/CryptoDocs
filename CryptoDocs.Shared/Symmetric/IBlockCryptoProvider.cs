@@ -1,4 +1,6 @@
-﻿namespace CryptoDocs.Shared.Symmetric
+﻿using System.Collections.Generic;
+
+namespace CryptoDocs.Shared.Symmetric
 {
     public interface IBlockCryptoProvider
     {
@@ -6,8 +8,8 @@
 
         int KeySize { get; }
 
-        byte[] Encrypt(byte[] block, byte[] key);
+        byte[] Encrypt(IReadOnlyCollection<byte> block, IReadOnlyCollection<byte> key);
 
-        byte[] Decrypt(byte[] block, byte[] key);
+        byte[] Decrypt(IReadOnlyCollection<byte> block, IReadOnlyCollection<byte> key);
     }
 }

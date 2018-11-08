@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using System.Security.Cryptography;
-using System.Text;
 using MoreLinq;
 
 namespace CryptoDocs.Shared.Symmetric
@@ -22,49 +20,37 @@ namespace CryptoDocs.Shared.Symmetric
             _rng = new RNGCryptoServiceProvider();
         }
 
-        public byte[] Encrypt(byte[] data, byte[] key)
+        public byte[] Encrypt(IReadOnlyCollection<byte> sourceData, IEnumerable<byte> key)
         {
+            var blockKey = BuildBlockKey(key);
+            var blocks = BuildBlocks(sourceData);
             var iv = BuildIv();
-            var blocks = BuildBlocks(data);
+            var cipherData = new List<byte>(iv);
 
-            var cipherData = new List<byte>();
-            var lastIv = iv;
 
             foreach (var block in blocks)
             {
-                var cipherBlock = _block.Encrypt(XorArrays(block, lastIv), key);
+                var cipherBlock = _block.Encrypt(XorArrays(block, iv), blockKey);
 
                 cipherData.AddRange(cipherBlock);
 
-                lastIv = cipherBlock;
+                iv = cipherBlock;
             }
-            
-            return iv.Concat(cipherData).ToArray();
+
+            return cipherData.ToArray();
         }
-
-        private byte[][] BuildBlocks(byte[] data)
+     
+        public byte[] Decrypt(IReadOnlyCollection<byte> encryptedData, IEnumerable<byte> key)
         {
-            var sizePart = BitConverter.GetBytes(data.Length);
-            var dummyBytesCount = _block.BlockSize - (sizePart.Length + data.Length) % _block.BlockSize;
-            var dummyBytes = new byte[dummyBytesCount];
-            _rng.GetBytes(dummyBytes);
-
-            return sizePart.Concat(data).Concat(dummyBytes)
-                .Batch(_block.BlockSize)
-                .Select(x => x.ToArray())
-                .ToArray();
-        }
-
-        public byte[] Decrypt(byte[] data, byte[] key)
-        {
-            var iv = data.Take(_block.BlockSize).ToArray();
-            var blocks = data.Skip(_block.BlockSize).Batch(_block.BlockSize).Select(x=> x.ToArray());
+            var blockKey = BuildBlockKey(key);
+            var blocks = encryptedData.Skip(_block.BlockSize).Batch(_block.BlockSize).Select(x=> x.ToArray());
+            var iv = encryptedData.Take(_block.BlockSize).ToArray();
 
             var sourceData = new List<byte>();
 
             foreach (var block in blocks)
             {
-                var sourceBlock = XorArrays(_block.Decrypt(block, key), iv);
+                var sourceBlock = XorArrays(_block.Decrypt(block, blockKey), iv);
 
                 sourceData.AddRange(sourceBlock);
 
@@ -76,6 +62,23 @@ namespace CryptoDocs.Shared.Symmetric
             return sourceData.Skip(sizeof(int)).Take(size).ToArray();
         }
 
+        private byte[] BuildBlockKey(IEnumerable<byte> key)
+        {
+            return key.Take(_block.KeySize).ToArray();
+        }
+
+        private IEnumerable<byte[]> BuildBlocks(IReadOnlyCollection<byte> data)
+        {
+            var sizePart = BitConverter.GetBytes(data.Count);
+            var dummyBytesCount = _block.BlockSize - (sizePart.Length + data.Count) % _block.BlockSize;
+            var dummyBytes = new byte[dummyBytesCount];
+            _rng.GetBytes(dummyBytes);
+
+            return sizePart.Concat(data).Concat(dummyBytes)
+                .Batch(_block.BlockSize)
+                .Select(x => x.ToArray());
+        }
+
         private byte[] BuildIv()
         {
             var iv = new byte[_block.BlockSize];
@@ -84,16 +87,16 @@ namespace CryptoDocs.Shared.Symmetric
             return iv;
         }
 
-        private byte[] XorArrays(byte[] first, byte[] second)
+        private static byte[] XorArrays(IReadOnlyList<byte> first, IReadOnlyList<byte> second)
         {
-            if (first.Length != second.Length)
+            if (first.Count != second.Count)
             {
                 throw new InvalidOperationException("Array length should be equal");
             }
 
-            var result = new byte[first.Length];
+            var result = new byte[first.Count];
 
-            for (var i = 0; i < first.Length; i++)
+            for (var i = 0; i < first.Count; i++)
             {
                 result[i] = (byte)(first[i] ^ second[i]);
             }

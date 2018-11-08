@@ -1,31 +1,31 @@
-﻿using CryptoDocs.Shared;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Buffers.Text;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using CryptoDocs.Shared.Dto;
 using CryptoDocs.Shared.Rsa;
 using CryptoDocs.Shared.Symmetric;
-using Microsoft.EntityFrameworkCore.Internal;
-using MoreLinq;
 
 namespace CryptoDocs.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     public class DataController : Controller
     {
-        private readonly IBlockCryptoProvider _cryptoProvider;
+        private readonly IDataCryptoProvider _cryptoProvider;
 
         private const string DirectoryName = "files";
 
+        private static readonly RandomNumberGenerator SecureRandom = RandomNumberGenerator.Create();
+
+        private static readonly IDictionary<(BigInteger, BigInteger), byte[]> SessionKeyCache =
+            new ConcurrentDictionary<(BigInteger, BigInteger), byte[]>();
+
         public DataController
         (
-            IBlockCryptoProvider cryptoProvider
+            IDataCryptoProvider cryptoProvider
         )
         {
             if (!System.IO.Directory.Exists(DirectoryName))
@@ -35,11 +35,6 @@ namespace CryptoDocs.Server.Controllers
 
             _cryptoProvider = cryptoProvider;
         }
-
-        public static RandomNumberGenerator SecureRandom = RandomNumberGenerator.Create();
-
-        public static IDictionary<(BigInteger, BigInteger), byte[]> SessionKeyCache =
-            new ConcurrentDictionary<(BigInteger, BigInteger), byte[]>();
 
         public byte[] GetEncryptedSessionKey([FromBody]RsaPublicKeyDto publicKeyDto)
         {

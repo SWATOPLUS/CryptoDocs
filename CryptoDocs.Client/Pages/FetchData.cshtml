@@ -15,7 +15,7 @@
 {
     <p>Session key:</p>
     <p>@Convert.ToBase64String(SessionKey)</p>
-
+    <p>@string.Join(", ", SessionKey)</p>
     <p>File name</p>
     <div><input type="text" bind="@FileName" onchange=@SetDirty /></div>
     <p>File name</p>
@@ -28,10 +28,10 @@
     </div>
 }
 
-@if (IsSaved)
+@*@if (IsSaved)
 {
     <span>Same with server</span>
-}
+}*@
 
 @functions {
 
@@ -71,7 +71,6 @@ async Task GetFile()
 
 async Task SetFile()
 {
-    var keys = SessionKey.Batch(32).ToArray();
     var data = Encoding.UTF8.GetBytes(FileContent ?? string.Empty);
 
     var encryptedContent = _сryptoProvider.Encrypt(data, SessionKey);
@@ -80,7 +79,7 @@ async Task SetFile()
     {
         EncryptedContentBase64 = encryptedContentBase64,
         PublicKeyDto = KeyPair.PublicKey.ToDto()
-    }) && false;
+    });
 }
 
 void SetDirty(UIChangeEventArgs e)

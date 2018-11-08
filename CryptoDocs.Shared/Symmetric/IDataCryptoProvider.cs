@@ -1,9 +1,11 @@
-﻿namespace CryptoDocs.Shared.Symmetric
+﻿using System.Collections.Generic;
+
+namespace CryptoDocs.Shared.Symmetric
 {
     public interface IDataCryptoProvider
     {
-        byte[] Encrypt(byte[] data, byte[] key);
+        byte[] Encrypt(IReadOnlyCollection<byte> sourceData, IEnumerable<byte> key);
 
-        byte[] Decrypt(byte[] data, byte[] key);
+        byte[] Decrypt(IReadOnlyCollection<byte> encryptedData, IEnumerable<byte> key);
     }
 }
