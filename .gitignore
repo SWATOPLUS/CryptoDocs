@@ -1,6 +1,6 @@
 .vs/
 **/bin/
 **/obj/
-*.csproj.user
+*.user
 launchSettings.json
 **/files/
