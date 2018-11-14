@@ -78,7 +78,7 @@
             this.ServerUrlTextBox.Name = "ServerUrlTextBox";
             this.ServerUrlTextBox.Size = new System.Drawing.Size(244, 20);
             this.ServerUrlTextBox.TabIndex = 4;
-            this.ServerUrlTextBox.Text = "http://localhost:50487";
+            this.ServerUrlTextBox.Text = "http://localhost:5000";
             this.ServerUrlTextBox.TextChanged += new System.EventHandler(this.ServerUrlTextBox_TextChanged);
             // 
             // ServerUrlLabel

@@ -57,7 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HttpClientExtensions.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +101,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CryptoDocs.Abstractions\CryptoDocs.Abstractions.csproj">
+      <Project>{3eea4890-676a-4fcc-8d87-9f3da70032a2}</Project>
+      <Name>CryptoDocs.Abstractions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CryptoDocs.RestClient\CryptoDocs.RestClient.csproj">
+      <Project>{DB335134-FDB7-4D75-AF7A-E5C70D736A46}</Project>
+      <Name>CryptoDocs.RestClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CryptoDocs.Shared\CryptoDocs.Shared.csproj">
       <Project>{393d12b6-25d8-4a79-b31f-d06466364f87}</Project>
       <Name>CryptoDocs.Shared</Name>

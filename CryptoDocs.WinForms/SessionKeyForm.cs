@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net.Http;
 using System.Windows.Forms;
+using CryptoDocs.Abstractions;
+using CryptoDocs.RestClient;
 using CryptoDocs.Shared;
 using CryptoDocs.Shared.Dto;
 using CryptoDocs.Shared.Rsa;
@@ -9,18 +11,22 @@ namespace CryptoDocs.WinForms
 {
     public partial class SessionKeyForm : Form
     {
+        private readonly string _baseUrl;
         private static readonly IBigIntegerService BigIntegerService = new BigIntegerService();
+        private static readonly HttpClient HttpClient = new HttpClient();
 
-        private readonly Uri _uri;
+        public ICryptoDocsService CryptoDocsService { get; private set; }
+
+
         public byte[] SessionKey { get; private set; }
         public RsaKeyPair KeyPair { get; private set; }
 
-        public SessionKeyForm(string url)
+        public SessionKeyForm(string baseUrl)
         {
-            _uri = new Uri(url);
+            _baseUrl = baseUrl;
             InitializeComponent();
 
-            SessionKeyLabel.Text = $"Session key from {url}";
+            SessionKeyLabel.Text = $"Session key from {baseUrl}";
         }
 
         private void GenerateButton_Click(object sender, EventArgs e)
@@ -42,17 +48,11 @@ namespace CryptoDocs.WinForms
                 return;
             }
 
+            CryptoDocsService = new CryptoDocsServiceClient(HttpClient, _baseUrl);
 
-            using (var client = new HttpClient())
-            {
-                var url = new Uri(_uri, "api/Data/GetEncryptedSessionKey");
-
-                var sessionKeyEncryptedBase64 = await client.PostJsonAsync<string>(url.AbsoluteUri, KeyPair.PublicKey.ToDto());
-
-                var sessionKeyEncrypted = Convert.FromBase64String(sessionKeyEncryptedBase64);
-                SessionKey = KeyPair.PrivateKey.Decrypt(sessionKeyEncrypted);
-                SessionKeyTextBox.Text = Convert.ToBase64String(SessionKey);
-            }
+            var sessionKeyEncrypted = await CryptoDocsService.GetEncryptedSessionKeyAsync(KeyPair.PublicKey.ToDto());
+            SessionKey = KeyPair.PrivateKey.Decrypt(sessionKeyEncrypted);
+            SessionKeyTextBox.Text = Convert.ToBase64String(SessionKey);
 
             DialogResult = DialogResult.OK;
         }

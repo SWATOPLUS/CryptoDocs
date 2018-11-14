@@ -1,4 +1,4 @@
-﻿namespace CryptoDocs.Shared.Dto
+﻿namespace CryptoDocs.Abstractions
 {
     public class RsaPublicKeyDto
     {

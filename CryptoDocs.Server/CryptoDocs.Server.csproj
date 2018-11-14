@@ -12,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CryptoDocs.Abstractions\CryptoDocs.Abstractions.csproj" />
     <ProjectReference Include="..\CryptoDocs.Client\CryptoDocs.Client.csproj" />
+    <ProjectReference Include="..\CryptoDocs.Services\CryptoDocs.Services.csproj" />
     <ProjectReference Include="..\CryptoDocs.Shared\CryptoDocs.Shared.csproj" />
   </ItemGroup>
 

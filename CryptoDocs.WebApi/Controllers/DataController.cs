@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,9 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using CryptoDocs.Abstractions;
 using CryptoDocs.Shared.Dto;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CryptoDocs.Server.Controllers
+namespace CryptoDocs.WebApi.Controllers
 {
     [Route("api/[controller]/[action]")]
     public class DataController : Controller

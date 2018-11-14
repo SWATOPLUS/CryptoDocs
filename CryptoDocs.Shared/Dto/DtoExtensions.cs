@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using CryptoDocs.Abstractions;
 using CryptoDocs.Shared.Rsa;
 
 namespace CryptoDocs.Shared.Dto

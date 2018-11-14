@@ -15,6 +15,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.Shared.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoDocs.WinForms", "CryptoDocs.WinForms\CryptoDocs.WinForms.csproj", "{4C9B915F-9368-4895-9966-611907CD95ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoDocs.Services", "CryptoDocs.Services\CryptoDocs.Services.csproj", "{FCD146D2-9843-4138-B2D8-C516DDBAD017}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoDocs.Abstractions", "CryptoDocs.Abstractions\CryptoDocs.Abstractions.csproj", "{3EEA4890-676A-4FCC-8D87-9F3DA70032A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoDocs.RestClient", "CryptoDocs.RestClient\CryptoDocs.RestClient.csproj", "{DB335134-FDB7-4D75-AF7A-E5C70D736A46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoDocs.WebApi", "CryptoDocs.WebApi\CryptoDocs.WebApi.csproj", "{DAF20377-CC57-45FE-8EA4-42243A13E065}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +53,22 @@ Global
 		{4C9B915F-9368-4895-9966-611907CD95ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C9B915F-9368-4895-9966-611907CD95ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C9B915F-9368-4895-9966-611907CD95ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCD146D2-9843-4138-B2D8-C516DDBAD017}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCD146D2-9843-4138-B2D8-C516DDBAD017}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCD146D2-9843-4138-B2D8-C516DDBAD017}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCD146D2-9843-4138-B2D8-C516DDBAD017}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EEA4890-676A-4FCC-8D87-9F3DA70032A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EEA4890-676A-4FCC-8D87-9F3DA70032A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EEA4890-676A-4FCC-8D87-9F3DA70032A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EEA4890-676A-4FCC-8D87-9F3DA70032A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB335134-FDB7-4D75-AF7A-E5C70D736A46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB335134-FDB7-4D75-AF7A-E5C70D736A46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB335134-FDB7-4D75-AF7A-E5C70D736A46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB335134-FDB7-4D75-AF7A-E5C70D736A46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAF20377-CC57-45FE-8EA4-42243A13E065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAF20377-CC57-45FE-8EA4-42243A13E065}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAF20377-CC57-45FE-8EA4-42243A13E065}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAF20377-CC57-45FE-8EA4-42243A13E065}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CryptoDocs.Abstractions;
+using CryptoDocs.RestClient;
 using CryptoDocs.Shared.Dto;
 using CryptoDocs.Shared.Rsa;
 using CryptoDocs.Shared.Symmetric;
@@ -16,33 +18,35 @@ namespace CryptoDocs.WinForms
 {
     public partial class MainForm : Form
     {
-        private readonly CbcCryptoProvider _cryptoProvider;
+        private readonly IDataCryptoProvider _cryptoProvider;
         private byte[] SessionKey { get; set; }
 
         private RsaKeyPair KeyPair { get; set; }
 
+        private ICryptoDocsService _cryptoDocsService;
+        private string CryptoAlgorithm { get; } = Abstractions.CryptoAlgorithm.SerpentCbc;
+
         public MainForm()
         {
             InitializeComponent();
-            _cryptoProvider = new CbcCryptoProvider(new IdeaCryptoProvider());
+            _cryptoProvider = new CbcCryptoProvider(new SerpentCryptoProvider());
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
         {
             var url = ServerUrlTextBox.Text;
-
             var form = new SessionKeyForm(url);
-
             var result = form.ShowDialog();
 
             if (result == DialogResult.OK)
             {
                 SessionKey = form.SessionKey;
                 KeyPair = form.KeyPair;
+                _cryptoDocsService = form.CryptoDocsService;
             }
         }
 
-        private bool Validate()
+        private bool ValidateAction()
         {
             if (string.IsNullOrWhiteSpace(FileNameTextBox.Text))
             {
@@ -66,42 +70,30 @@ namespace CryptoDocs.WinForms
 
         private async void SaveButton_Click(object sender, EventArgs e)
         {
-            if (Validate())
+            if (ValidateAction())
             {
                 return;
             }
 
-            using (var client = new HttpClient())
-            {
-                var data = Encoding.UTF8.GetBytes(MainTextBox.Text ?? string.Empty);
+            var data = Encoding.UTF8.GetBytes(MainTextBox.Text ?? string.Empty);
+            var encryptedContent = _cryptoProvider.Encrypt(data, SessionKey);
 
-                var encryptedContent = _cryptoProvider.Encrypt(data, SessionKey);
-                var encryptedContentBase64 = Convert.ToBase64String(encryptedContent);
-                var url = new Uri(new Uri(ServerUrlTextBox.Text), $"api/Data/SetFile/{FileNameTextBox.Text}");
-                await client.PostJsonAsync<bool>(url.AbsoluteUri, new FileRequest
-                {
-                    EncryptedContentBase64 = encryptedContentBase64,
-                    PublicKeyDto = KeyPair.PublicKey.ToDto()
-                });
-            }
-
+            await _cryptoDocsService.SetEncryptedFileAsync(KeyPair.PublicKey.ToDto(), CryptoAlgorithm,
+                FileNameTextBox.Text, encryptedContent);
         }
 
         private async void LoadButton_Click(object sender, EventArgs e)
         {
-            if (Validate())
+            if (ValidateAction())
             {
                 return;
             }
 
-            using (var client = new HttpClient())
-            {
-                var url = new Uri(new Uri(ServerUrlTextBox.Text), $"api/Data/GetFile/{FileNameTextBox.Text}");
-                var encryptedContentBase64 = await client.PostJsonAsync<string>(url.AbsoluteUri, KeyPair.PublicKey.ToDto());
-                var encryptedContent = Convert.FromBase64String(encryptedContentBase64);
-                var data = _cryptoProvider.Decrypt(encryptedContent, SessionKey);
-                MainTextBox.Text = Encoding.UTF8.GetString(data);
-            }
+            var encryptedContent = await _cryptoDocsService.GetEncryptedFileAsync(KeyPair.PublicKey.ToDto(),
+                CryptoAlgorithm, FileNameTextBox.Text);
+
+            var data = _cryptoProvider.Decrypt(encryptedContent, SessionKey);
+            MainTextBox.Text = Encoding.UTF8.GetString(data);
         }
     }
 }

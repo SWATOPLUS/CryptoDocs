@@ -1,4 +1,6 @@
-﻿namespace CryptoDocs.Shared.Dto
+﻿using CryptoDocs.Abstractions;
+
+namespace CryptoDocs.Shared.Dto
 {
     public class FileRequest
     {

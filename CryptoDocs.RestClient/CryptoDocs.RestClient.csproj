@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="morelinq" Version="3.0.0" />
+    <PackageReference Include="Microsoft.JSInterop" Version="0.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CryptoDocs.Abstractions\CryptoDocs.Abstractions.csproj" />
+    <ProjectReference Include="..\CryptoDocs.Shared\CryptoDocs.Shared.csproj" />
   </ItemGroup>
 
 </Project>
