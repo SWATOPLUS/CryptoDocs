@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.Shared", "Crypto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.PrimeGenerator", "CryptoDocs.PrimeGenerator\CryptoDocs.PrimeGenerator.csproj", "{E0C2D65A-E07F-416C-9FE3-0CA7FE647754}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoDocs.Shared.Tests", "CryptoDocs.Shared.Tests\CryptoDocs.Shared.Tests.csproj", "{C5D13088-346B-4131-A1D2-EE08D6211BB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.Shared.Tests", "CryptoDocs.Shared.Tests\CryptoDocs.Shared.Tests.csproj", "{C5D13088-346B-4131-A1D2-EE08D6211BB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoDocs.WinForms", "CryptoDocs.WinForms\CryptoDocs.WinForms.csproj", "{4C9B915F-9368-4895-9966-611907CD95ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{C5D13088-346B-4131-A1D2-EE08D6211BB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5D13088-346B-4131-A1D2-EE08D6211BB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5D13088-346B-4131-A1D2-EE08D6211BB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C9B915F-9368-4895-9966-611907CD95ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C9B915F-9368-4895-9966-611907CD95ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C9B915F-9368-4895-9966-611907CD95ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C9B915F-9368-4895-9966-611907CD95ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
