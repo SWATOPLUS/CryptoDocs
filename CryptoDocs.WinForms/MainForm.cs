@@ -24,12 +24,12 @@ namespace CryptoDocs.WinForms
         private RsaKeyPair KeyPair { get; set; }
 
         private ICryptoDocsService _cryptoDocsService;
-        private string CryptoAlgorithm { get; } = Abstractions.CryptoAlgorithm.SerpentCbc;
+        private string CryptoAlgorithm { get; } = Abstractions.CryptoAlgorithm.AesOfb;
 
         public MainForm()
         {
             InitializeComponent();
-            _cryptoProvider = new CbcCryptoProvider(new SerpentCryptoProvider());
+            _cryptoProvider = new OfbCryptoProvider(new AesCryptoProvider());
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
