@@ -2,10 +2,10 @@
 
 namespace CryptoDocs.Shared.Rsa
 {
-    public class RsaPublicKey
+    public class RsaPublicKey : RsaKeyBase
     {
-        public BigInteger N { get; set; }
-
         public BigInteger E { get; set; }
+
+        public override BigInteger Pow => E;
     }
 }

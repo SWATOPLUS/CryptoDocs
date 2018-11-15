@@ -10,12 +10,12 @@ namespace CryptoDocs.DigitalSignature.Cli
     internal static class Program
     {
         private const string SignCommand = "sign";
-        private const string ValidateCommand = "command";
+        private const string CheckCommand = "check";
         private const string HashCommand = "hash";
         private const string GenRsaCommand = "genrsa";
 
         private const string UsageString =
-            "Usage: hash <file> / sign <file> <privkey> / validate <file> <sign> <pubkey> / genrsa <keyname>";
+            "Usage: hash <file> / signFile <file> <privkey> / validate <file> <signFile> <pubkey> / genrsa <keyname>";
 
         private static void Main(string[] args)
         {
@@ -34,10 +34,10 @@ namespace CryptoDocs.DigitalSignature.Cli
                     GenRsa(args[1]);
                     break;
                 case SignCommand when args.Length > 2:
-                    Sign(args[1], args[2]);
+                    SignRsa(args[1], args[2]);
                     break;
-                case ValidateCommand when args.Length > 3:
-                    Validate(args[1], args[2], args[3]);
+                case CheckCommand when args.Length > 3:
+                    CheckRsa(args[1], args[2], args[3]);
                     break;
                 default:
                     Console.WriteLine(UsageString);
@@ -45,14 +45,32 @@ namespace CryptoDocs.DigitalSignature.Cli
             }
         }
 
-        private static void Validate(string s, string s1, string ss)
+        private static void CheckRsa(string file, string signFile, string publicKeyFile)
         {
-            throw new NotImplementedException();
+            var bigIntegerPair = ReadBigIntegerPair(publicKeyFile);
+            var publicKey = new RsaPublicKey {N = bigIntegerPair.Item1, E = bigIntegerPair.Item2};
+            var hash = GetFileHash(file);
+            var sign = File.ReadAllBytes(signFile);
+            var signHash = publicKey.Decrypt(sign);
+
+            if (signHash.SequenceEqual(hash))
+            {
+                Console.WriteLine("Sign is valid");
+            }
+            else
+            {
+                Console.WriteLine("Sign is invalid");
+            }
         }
 
-        private static void Sign(string s, string b)
+        private static void SignRsa(string file, string privateKeyFile)
         {
-            throw new NotImplementedException();
+            var bigIntegerPair = ReadBigIntegerPair(privateKeyFile);
+            var privateKey = new RsaPrivateKey {N = bigIntegerPair.Item1, D = bigIntegerPair.Item2};
+            var hash = GetFileHash(file);
+            var sign = privateKey.Encrypt(hash);
+
+            File.WriteAllBytes($"{file}.rsign", sign);
         }
 
         private static void GenRsa(string keyName)

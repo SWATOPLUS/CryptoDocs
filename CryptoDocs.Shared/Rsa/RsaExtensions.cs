@@ -7,7 +7,7 @@ namespace CryptoDocs.Shared.Rsa
 {
     public static class RsaExtensions
     {
-        public static byte[] Encrypt(this RsaPublicKey publicKey, byte[] sourceData)
+        public static byte[] Encrypt(this RsaKeyBase key, byte[] sourceData)
         {
             var batches = sourceData.Batch(127);
             var encryptedData = new List<byte>();
@@ -15,7 +15,7 @@ namespace CryptoDocs.Shared.Rsa
             foreach (var batch in batches)
             {
                 var m = new BigInteger(MoreEnumerable.Append(batch, (byte)127).ToArray());
-                var c = BigInteger.ModPow(m, publicKey.E, publicKey.N);
+                var c = BigInteger.ModPow(m, key.Pow, key.N);
 
                 var dataBatch = c.ToByteArray();
                 var zerosCount = 256 - dataBatch.Length;
@@ -27,7 +27,7 @@ namespace CryptoDocs.Shared.Rsa
             return encryptedData.ToArray();
         }
 
-        public static byte[] Decrypt(this RsaPrivateKey privateKey, byte[] encryptedData)
+        public static byte[] Decrypt(this RsaKeyBase key, byte[] encryptedData)
         {
             var batches = encryptedData.Batch(256);
             var sourceData = new List<byte>();
@@ -35,11 +35,11 @@ namespace CryptoDocs.Shared.Rsa
             foreach (var batch in batches)
             {
                 var c = new BigInteger(batch.ToArray());
-                var m = BigInteger.ModPow(c, privateKey.D, privateKey.N);
+                var m = BigInteger.ModPow(c, key.Pow, key.N);
 
                 var dataBatch = m.ToByteArray();
 
-                sourceData.AddRange(Enumerable.Range(0, dataBatch.Length - 1).Select(x=> dataBatch[x]));
+                sourceData.AddRange(dataBatch.Take(dataBatch.Length - 1));
             }
 
             return sourceData.ToArray();
