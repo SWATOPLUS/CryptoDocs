@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using CryptoDocs.DigitalSignature.Cli.EllipticCurve;
 using CryptoDocs.Shared;
 using CryptoDocs.Shared.Rsa;
+using Utils;
+using BigInteger = System.Numerics.BigInteger;
 
 namespace CryptoDocs.DigitalSignature.Cli
 {
@@ -65,23 +66,6 @@ namespace CryptoDocs.DigitalSignature.Cli
             }
         }
 
-        private static void CheckEc(string file, string signFile, string publicKeyFile)
-        {
-            var publicKey = EcPoint.Parse(File.ReadAllText(publicKeyFile));
-            var dto = EcPoint.Parse(File.ReadAllText(signFile));
-            var sign = new EcSign {R = dto.X, S = dto.Y};
-            var hash = GetFileHash(file);
-
-            if (EcPoint.DefaultInstance.SingVer(publicKey, hash, sign))
-            {
-                Console.WriteLine("Sign is valid");
-            }
-            else
-            {
-                Console.WriteLine("Sign is invalid");
-            }
-        }
-
         private static void GenEc(string name)
         {
             var g = EcPoint.DefaultInstance;
@@ -93,12 +77,60 @@ namespace CryptoDocs.DigitalSignature.Cli
 
         private static void SignEc(string file, string privateKeyFile)
         {
-            var n = BigInteger.Parse(File.ReadAllText(privateKeyFile));
-            var hash = GetFileHash(file);
-            var sign = EcPoint.DefaultInstance.SingGen(n, hash);
-            var dto = new EcPoint {X = sign.R, Y = sign.S};
-            File.WriteAllText($"{file}.ecsign", dto.ToString());
+            var text = File.ReadAllText(file);
+            var privateKey = ReadPrivateKey(privateKeyFile);
+            File.WriteAllText($"{file}.ecsign", Helper.Sign(file, privateKey));
         }
+
+        private static void CheckEc(string file, string signFile, string publicKeyFile)
+        {
+            var sign = File.ReadAllText(signFile);
+            var text = File.ReadAllText(file);
+
+            if (Helper.Check(text,sign, ReadPublicKey(publicKeyFile)))
+            {
+                Console.WriteLine("Sign is valid");
+            }
+            else
+            {
+                Console.WriteLine("Sign is invalid");
+            }
+        }
+
+        //private static void SignEc(string file, string privateKeyFile)
+        //{
+        //    var n = BigInteger.Parse(File.ReadAllText(privateKeyFile));
+        //    var hash = GetFileHash(file);
+        //    var sign = EcPoint.DefaultInstance.SingGen(n, hash);
+        //    var dto = new EcPoint { X = sign.R, Y = sign.S };
+        //    File.WriteAllText($"{file}.ecsign", dto.ToString());
+        //}
+
+        //private static void CheckEc(string file, string signFile, string publicKeyFile)
+        //{
+        //    var publicKey = EcPoint.Parse(File.ReadAllText(publicKeyFile));
+        //    var dto = EcPoint.Parse(File.ReadAllText(signFile));
+        //    var sign = new EcSign { R = dto.X, S = dto.Y };
+        //    var hash = GetFileHash(file);
+
+        //    if (EcPoint.DefaultInstance.SingVer(publicKey, hash, sign))
+        //    {
+        //        Console.WriteLine("Sign is valid");
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("Sign is invalid");
+        //    }
+        //}
+
+        //private static void SignEc(string file, string privateKeyFile)
+        //{
+        //    var n = BigInteger.Parse(File.ReadAllText(privateKeyFile));
+        //    var hash = GetFileHash(file);
+        //    var sign = EcPoint.DefaultInstance.SingGen(n, hash);
+        //    var dto = new EcPoint { X = sign.R, Y = sign.S };
+        //    File.WriteAllText($"{file}.ecsign", dto.ToString());
+        //}
 
         private static void CheckRsa(string file, string signFile, string publicKeyFile)
         {
@@ -175,6 +207,16 @@ namespace CryptoDocs.DigitalSignature.Cli
             }
 
             return sha.GetDigest();
+        }
+        
+        private static Utils.BigInteger ReadPrivateKey(string name)
+        {
+            return Helper.GeKey();
+        }
+
+        private static Utils.BigInteger ReadPublicKey(string key)
+        {
+            return Helper.GeKey();
         }
     }
 
