@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using CryptoDocs.DigitalSignature.Cli.EllipticCurve;
 using CryptoDocs.Shared;
 using CryptoDocs.Shared.Rsa;
 
@@ -13,9 +14,11 @@ namespace CryptoDocs.DigitalSignature.Cli
         private const string CheckCommand = "check";
         private const string HashCommand = "hash";
         private const string GenRsaCommand = "genrsa";
+        private const string GenEcCommand = "genec";
 
-        private const string UsageString =
-            "Usage: hash <file> / signFile <file> <privkey> / validate <file> <signFile> <pubkey> / genrsa <keyname>";
+        private static readonly string UsageString =
+            $"Usage: {HashCommand} <file> / {SignCommand} <file> <privkey> " +
+            $"/ {CheckCommand} <file> <signFile> <pubkey> / {GenRsaCommand} <keyname> / {GenEcCommand} <keyname>";
 
         private static void Main(string[] args)
         {
@@ -33,8 +36,18 @@ namespace CryptoDocs.DigitalSignature.Cli
                 case GenRsaCommand when args.Length > 1:
                     GenRsa(args[1]);
                     break;
+                case GenEcCommand when args.Length > 1:
+                    GenEc(args[1]);
+                    break;
                 case SignCommand when args.Length > 2:
-                    SignRsa(args[1], args[2]);
+                    if (args[2].EndsWith(".ecpri"))
+                    {
+                        SignRsa(args[1], args[2]);
+                    }
+                    else
+                    {
+                        SignRsa(args[1], args[2]);
+                    }
                     break;
                 case CheckCommand when args.Length > 3:
                     CheckRsa(args[1], args[2], args[3]);
@@ -43,6 +56,24 @@ namespace CryptoDocs.DigitalSignature.Cli
                     Console.WriteLine(UsageString);
                     break;
             }
+        }
+
+        private static void GenEc(string name)
+        {
+            var g = EcPoint.DefaultInstance;
+            var n = g.GeneratePrivateKey(160 / 8);
+            File.WriteAllText($"{name}.ecpri", n.ToString());
+            var q = g.Multiply(n);
+            File.WriteAllText($"{name}.ecpub", q.ToString());
+        }
+
+        private static void SignEc(string file, string privateKeyFile)
+        {
+            var n = BigInteger.Parse(File.ReadAllText(privateKeyFile));
+            var hash = GetFileHash(file);
+            var sign = EcPoint.DefaultInstance.SingGen(n, hash);
+            var dto = new EcPoint {X = sign.R, Y = sign.S};
+            File.WriteAllText($"{file}.ecsign", dto.ToString());
         }
 
         private static void CheckRsa(string file, string signFile, string publicKeyFile)
@@ -76,7 +107,7 @@ namespace CryptoDocs.DigitalSignature.Cli
         private static void GenRsa(string keyName)
         {
             var provider = new BigIntegerService();
-            var keyPair = RsaKeyPair.Generate(provider.GetPrime(), provider.GetPrime());
+            var keyPair = RsaKeyPair.Generate(provider.GetPrime(1024 / 8), provider.GetPrime(1024 / 8));
 
             WriteBigIntegerPair($"{keyName}.rpub", keyPair.N, keyPair.E);
             WriteBigIntegerPair($"{keyName}.rpri", keyPair.N, keyPair.D);

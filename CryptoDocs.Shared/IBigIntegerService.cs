@@ -6,8 +6,8 @@ namespace CryptoDocs.Shared
     {
         bool IsProbablyPrime(BigInteger value, uint witnesses = 10);
 
-        BigInteger GetRandom();
+        BigInteger GetRandom(int byteSize);
 
-        BigInteger GetPrime();
+        BigInteger GetPrime(int byteSize);
     }
 }

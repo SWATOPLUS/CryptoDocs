@@ -13,11 +13,11 @@ namespace CryptoDocs.Shared
             _rng = new RNGCryptoServiceProvider();
         }
 
-        public BigInteger GetPrime()
+        public BigInteger GetPrime(int byteSize)
         {
             while (true)
             {
-                var candidate = GetRandom();
+                var candidate = GetRandom(byteSize);
 
                 if (IsProbablyPrime(candidate, 100))
                 {
@@ -26,9 +26,9 @@ namespace CryptoDocs.Shared
             }
         }
 
-        public BigInteger GetRandom()
+        public BigInteger GetRandom(int byteSize)
         {
-            var bytes = new byte[1024 / 8];
+            var bytes = new byte[byteSize];
             _rng.GetBytes(bytes);
             bytes[bytes.Length - 1] = (byte)((bytes[bytes.Length - 1] >> 2) | 0b_0100_0000);
             return new BigInteger(bytes);
