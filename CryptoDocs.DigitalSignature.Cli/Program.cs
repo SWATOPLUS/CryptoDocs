@@ -42,7 +42,7 @@ namespace CryptoDocs.DigitalSignature.Cli
                 case SignCommand when args.Length > 2:
                     if (args[2].EndsWith(".ecpri"))
                     {
-                        SignRsa(args[1], args[2]);
+                        SignEc(args[1], args[2]);
                     }
                     else
                     {
@@ -50,11 +50,35 @@ namespace CryptoDocs.DigitalSignature.Cli
                     }
                     break;
                 case CheckCommand when args.Length > 3:
-                    CheckRsa(args[1], args[2], args[3]);
+                    if (args[3].EndsWith(".ecpub"))
+                    {
+                        CheckEc(args[1], args[2], args[3]);
+                    }
+                    else
+                    {
+                        CheckRsa(args[1], args[2], args[3]);
+                    }
                     break;
                 default:
                     Console.WriteLine(UsageString);
                     break;
+            }
+        }
+
+        private static void CheckEc(string file, string signFile, string publicKeyFile)
+        {
+            var publicKey = EcPoint.Parse(File.ReadAllText(publicKeyFile));
+            var dto = EcPoint.Parse(File.ReadAllText(signFile));
+            var sign = new EcSign {R = dto.X, S = dto.Y};
+            var hash = GetFileHash(file);
+
+            if (EcPoint.DefaultInstance.SingVer(publicKey, hash, sign))
+            {
+                Console.WriteLine("Sign is valid");
+            }
+            else
+            {
+                Console.WriteLine("Sign is invalid");
             }
         }
 
@@ -151,6 +175,16 @@ namespace CryptoDocs.DigitalSignature.Cli
             }
 
             return sha.GetDigest();
+        }
+    }
+
+    public static class ProgramExtensions
+    {
+        public static byte[] Simple(this byte[] arr)
+        {
+            var last = arr.Last();
+
+            return new[] {(byte) (last % 100)};
         }
     }
 }

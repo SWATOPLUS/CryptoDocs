@@ -14,6 +14,15 @@ namespace CryptoDocs.DigitalSignature.Cli.EllipticCurve
             Y = BigInteger.Parse("174050332293622031404857552280219410364023488927386650641")
         };
 
+        public static EcPoint SimpleInstance { get; } = new EcPoint
+        {
+            A = BigInteger.Parse("0"),
+            B = BigInteger.Parse("-4"),
+            M = BigInteger.Parse("211"),
+            X = BigInteger.Parse("2"),
+            Y = BigInteger.Parse("2")
+        };
+
         public static EcPoint Parse(string s)
         {
             var num = s.Split(" ");

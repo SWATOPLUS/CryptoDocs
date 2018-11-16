@@ -30,33 +30,29 @@ namespace CryptoDocs.DigitalSignature.Cli.EllipticCurve
         public static EcSign SingGen(this EcPoint g, BigInteger n, byte[] hash)
         {
             var h = hash.ToUnsignedBigInteger();
-            var k = GetRandomBetween(2, g.M);
-            var kg = g.Multiply(k);
-            BigInteger r;
-            BigInteger s;
 
             while (true)
             {
-                r = kg.X % g.M;
+                var k = GetRandomBetween(2, g.M);
+                var kg = g.Multiply(k);
+                var r = kg.X % g.M;
 
-                if (r == 2)
+                if (r == 0)
                 {
                     continue;
                 }
 
-                s = (k.ModInverse(g.M) * (h + n * r)).PositiveMod(g.M);
+                var s = (k.ModInverse(g.M) * (h + n * r)).PositiveMod(g.M);
 
                 if (s != 0)
                 {
-                    break;
+                    return new EcSign
+                    {
+                        R = r,
+                        S = s
+                    };
                 }
             }
-
-            return new EcSign
-            {
-                R = r,
-                S = s
-            };
         }
 
         public static BigInteger GeneratePrivateKey(this EcPoint g, int byteSize)
@@ -84,7 +80,7 @@ namespace CryptoDocs.DigitalSignature.Cli.EllipticCurve
             while (true)
             {
                 SecureRandom.GetBytes(bytes);
-                bytes[bytes.Length - 1] = lastByte;
+                //bytes[bytes.Length - 1] = lastByte;
                 var k = bytes.ToUnsignedBigInteger();
 
                 if (min <= k && k < border)
