@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.JSInterop">
-      <HintPath>C:\Users\p.zhdanovich\.nuget\packages\microsoft.jsinterop\0.6.0\lib\netstandard2.0\Microsoft.JSInterop.dll</HintPath>
+    <Reference Include="Microsoft.JSInterop, Version=0.6.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.JSInterop.0.6.0\lib\netstandard2.0\Microsoft.JSInterop.dll</HintPath>
     </Reference>
     <Reference Include="MoreLinq, Version=3.0.0.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.3.0.0\lib\net451\MoreLinq.dll</HintPath>
