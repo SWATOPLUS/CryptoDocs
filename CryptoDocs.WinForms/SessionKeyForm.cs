@@ -31,8 +31,8 @@ namespace CryptoDocs.WinForms
 
         private void GenerateButton_Click(object sender, EventArgs e)
         {
-            var p = BigIntegerService.GetPrime();
-            var q = BigIntegerService.GetPrime();
+            var p = BigIntegerService.GetPrime(1024);
+            var q = BigIntegerService.GetPrime(1024);
             KeyPairTextBox.Text = RsaKeyPair.Generate(p, q).ToString();
         }
 

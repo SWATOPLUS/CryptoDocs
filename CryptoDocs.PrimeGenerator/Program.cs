@@ -10,8 +10,8 @@ namespace CryptoDocs.PrimeGenerator
         {
             var generator = new BigIntegerService();
 
-            var p = generator.GetPrime();
-            var q = generator.GetPrime();
+            var p = generator.GetPrime(1024);
+            var q = generator.GetPrime(1024);
 
             var keyPair = RsaKeyPair.Generate(p, q);
             Console.WriteLine("primes:");
