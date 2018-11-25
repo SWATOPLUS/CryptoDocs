@@ -1,17 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27703.2042
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.Server", "CryptoDocs.Server\CryptoDocs.Server.csproj", "{06743BDC-C7FE-4D79-875B-1421C61E29E2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.Client", "CryptoDocs.Client\CryptoDocs.Client.csproj", "{7A0CD21A-9E2F-4149-8CAC-28769DE7FBD0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.Shared", "CryptoDocs.Shared\CryptoDocs.Shared.csproj", "{393D12B6-25D8-4A79-B31F-D06466364F87}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.PrimeGenerator", "CryptoDocs.PrimeGenerator\CryptoDocs.PrimeGenerator.csproj", "{E0C2D65A-E07F-416C-9FE3-0CA7FE647754}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.Shared.Tests", "CryptoDocs.Shared.Tests\CryptoDocs.Shared.Tests.csproj", "{C5D13088-346B-4131-A1D2-EE08D6211BB6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoDocs.WinForms", "CryptoDocs.WinForms\CryptoDocs.WinForms.csproj", "{4C9B915F-9368-4895-9966-611907CD95ED}"
 EndProject
@@ -23,22 +17,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.RestClient", "Cr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDocs.WebApi", "CryptoDocs.WebApi\CryptoDocs.WebApi.csproj", "{DAF20377-CC57-45FE-8EA4-42243A13E065}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoDocs.DigitalSignature.Cli", "CryptoDocs.DigitalSignature.Cli\CryptoDocs.DigitalSignature.Cli.csproj", "{08F41E37-5A38-43B0-886C-E2746F459FCA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{06743BDC-C7FE-4D79-875B-1421C61E29E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06743BDC-C7FE-4D79-875B-1421C61E29E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06743BDC-C7FE-4D79-875B-1421C61E29E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06743BDC-C7FE-4D79-875B-1421C61E29E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A0CD21A-9E2F-4149-8CAC-28769DE7FBD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A0CD21A-9E2F-4149-8CAC-28769DE7FBD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A0CD21A-9E2F-4149-8CAC-28769DE7FBD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A0CD21A-9E2F-4149-8CAC-28769DE7FBD0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{393D12B6-25D8-4A79-B31F-D06466364F87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{393D12B6-25D8-4A79-B31F-D06466364F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{393D12B6-25D8-4A79-B31F-D06466364F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,10 +31,6 @@ Global
 		{E0C2D65A-E07F-416C-9FE3-0CA7FE647754}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0C2D65A-E07F-416C-9FE3-0CA7FE647754}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0C2D65A-E07F-416C-9FE3-0CA7FE647754}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5D13088-346B-4131-A1D2-EE08D6211BB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5D13088-346B-4131-A1D2-EE08D6211BB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5D13088-346B-4131-A1D2-EE08D6211BB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5D13088-346B-4131-A1D2-EE08D6211BB6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C9B915F-9368-4895-9966-611907CD95ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C9B915F-9368-4895-9966-611907CD95ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C9B915F-9368-4895-9966-611907CD95ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,10 +51,6 @@ Global
 		{DAF20377-CC57-45FE-8EA4-42243A13E065}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAF20377-CC57-45FE-8EA4-42243A13E065}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAF20377-CC57-45FE-8EA4-42243A13E065}.Release|Any CPU.Build.0 = Release|Any CPU
-		{08F41E37-5A38-43B0-886C-E2746F459FCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08F41E37-5A38-43B0-886C-E2746F459FCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08F41E37-5A38-43B0-886C-E2746F459FCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08F41E37-5A38-43B0-886C-E2746F459FCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

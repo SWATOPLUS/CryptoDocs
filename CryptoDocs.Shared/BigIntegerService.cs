@@ -30,7 +30,7 @@ namespace CryptoDocs.Shared
         {
             var bytes = new byte[byteSize];
             _rng.GetBytes(bytes);
-            bytes[bytes.Length - 1] = (byte)((bytes[bytes.Length - 1] >> 2) | 0b_0100_0000);
+            bytes[bytes.Length - 1] = (byte)((bytes[bytes.Length - 1] >> 2) | 1 << 6);
             return new BigInteger(bytes);
         }
 

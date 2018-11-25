@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using CryptoDocs.Abstractions;
 using CryptoDocs.Shared.Dto;
 using CryptoDocs.Shared.Rsa;
+using CryptoDocs.Shared.Symmetric;
 
 namespace CryptoDocs.Services
 {
     public class CryptoDocsService : ICryptoDocsService
     {
         private readonly IFileStorageService _fileStorageService;
-        private readonly ICryptoProviderResolver _cryptoProviderResolver;
+        private readonly IDataCryptoProvider _dataCryptoProvider = new OfbCryptoProvider(new AesCryptoProvider());
         private RandomNumberGenerator SecureRandom { get; } = new RNGCryptoServiceProvider();
 
         private readonly IDictionary<(BigInteger, BigInteger), byte[]> _sessionKeyCache =
@@ -21,12 +22,10 @@ namespace CryptoDocs.Services
 
         public CryptoDocsService
         (
-            IFileStorageService fileStorageService,
-            ICryptoProviderResolver cryptoProviderResolver
+            IFileStorageService fileStorageService
         )
         {
             _fileStorageService = fileStorageService;
-            _cryptoProviderResolver = cryptoProviderResolver;
         }
 
         public Task<byte[]> GetEncryptedSessionKeyAsync(RsaPublicKeyDto publicKeyDto)
@@ -47,8 +46,7 @@ namespace CryptoDocs.Services
             var data = await _fileStorageService.GetFileAsync(fileName);
             var publicKey = publicKeyDto.ToModel();
             var sessionKey = _sessionKeyCache[(publicKey.N, publicKey.E)];
-            var cryptoProvider = _cryptoProviderResolver.GetCryptoProvider(algorithm);
-            return cryptoProvider.Encrypt(data, sessionKey);
+            return _dataCryptoProvider.Encrypt(data, sessionKey);
         }
 
         public async Task SetEncryptedFileAsync(RsaPublicKeyDto publicKeyDto, string algorithm, string fileName,
@@ -56,8 +54,7 @@ namespace CryptoDocs.Services
         {
             var publicKey = publicKeyDto.ToModel();
             var sessionKey = _sessionKeyCache[(publicKey.N, publicKey.E)];
-            var cryptoProvider = _cryptoProviderResolver.GetCryptoProvider(algorithm);
-            var data = cryptoProvider.Decrypt(encryptedFileContent, sessionKey);
+            var data = _dataCryptoProvider.Decrypt(encryptedFileContent, sessionKey);
             await _fileStorageService.SaveFileAsync(fileName, data);
         }
     }

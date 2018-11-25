@@ -10,8 +10,7 @@ namespace CryptoDocs.WebApi
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ICryptoDocsService>(new CryptoDocsService(
-                new DiskFileStorageService(), new CryptoProviderResolver()));
+            services.AddSingleton<ICryptoDocsService>(new CryptoDocsService(new DiskFileStorageService()));
 
             services.AddMvc();
         }
